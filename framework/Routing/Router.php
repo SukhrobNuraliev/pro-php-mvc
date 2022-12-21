@@ -66,7 +66,7 @@ class Router
         return null;
     }
 
-    public function errorHandler(int $code, callable $handler)
+    public function errorHandler(int $code, callable $handler): void
     {
         $this->errorHandlers[$code] = $handler;
     }

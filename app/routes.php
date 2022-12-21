@@ -5,7 +5,7 @@ use Framework\Routing\Router;
 return function (Router $router) {
     $router->add(
         'GET', '/',
-        fn() => 'hello world'
+        fn() => view('home', ['number' => 42])
     );
     $router->add(
         'GET', '/old-home',
@@ -23,7 +23,10 @@ return function (Router $router) {
         'GET', '/products/view/{product}',
         function () use ($router) {
             $parameters = $router->current()->parameters();
-            return "product is {$parameters['product']}";
+            return view('products/view', [
+                'product' => $parameters['product'],
+                'scary' => '<script>alert("boo!")</script>',
+            ]);
         },
     );
     $router->add(

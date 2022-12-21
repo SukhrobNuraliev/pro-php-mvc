@@ -15,6 +15,9 @@
       "Framework\\": "framework"
     }
   },
+  "files": [
+    "framework/helpers.php"
+  ],
   "authors": [
     {
       "name": "sukhrobnuraliev",
