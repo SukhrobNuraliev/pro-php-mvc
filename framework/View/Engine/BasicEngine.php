@@ -4,7 +4,6 @@ namespace Framework\View\Engine;
 
 use Framework\View\Engine\Engine;
 use Framework\View\View;
-use HasManager;
 
 class BasicEngine implements Engine
 {

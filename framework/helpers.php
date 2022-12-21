@@ -20,8 +20,10 @@ if (!function_exists('view')) {
             // the appropriate engine for the template
             $manager->addEngine('basic.php', new View\Engine\BasicEngine());
             $manager->addEngine('php', new View\Engine\PhpEngine());
+            $manager->addEngine('php', new View\Engine\PhpEngine());
 
             $manager->addMacro('escape', fn($value) => htmlspecialchars($value));
+            $manager->addMacro('includes', fn(...$params) => print view(...$params));
         }
 
         return $manager->resolve($template, $data);

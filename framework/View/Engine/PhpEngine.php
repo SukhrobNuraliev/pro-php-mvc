@@ -4,7 +4,6 @@ namespace Framework\View\Engine;
 
 use Exception;
 use Framework\View\View;
-use HasManager;
 
 class PhpEngine implements Engine
 {

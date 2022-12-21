@@ -1,5 +1,7 @@
 <?php
 
+namespace Framework\View\Engine;
+
 use Framework\View\Manager;
 
 trait HasManager
