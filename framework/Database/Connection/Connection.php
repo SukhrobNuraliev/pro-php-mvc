@@ -27,4 +27,14 @@ abstract class Connection
      * Start a new migration to add a table on this connection
      */
     abstract public function alterTable(string $table): Migration;
+
+    /**
+     * Find out if a table exists on this connection
+     */
+    abstract public function hasTable(string $string): bool;
+
+    /**
+     * Drop all tables in the current database
+     */
+    abstract public function dropTables(): int;
 }

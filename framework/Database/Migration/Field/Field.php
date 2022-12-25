@@ -6,6 +6,7 @@ abstract class Field
 {
     public string $name;
     public bool $nullable = false;
+    public $default;
 
     public function __construct(string $name)
     {

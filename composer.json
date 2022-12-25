@@ -28,6 +28,7 @@
     "filp/whoops": "^2.14",
     "vlucas/phpdotenv": "^5.5",
     "ext-pdo": "*",
-    "symfony/console": "^6.2"
+    "symfony/console": "^6.2",
+    "ext-mbstring": "*"
   }
 }
