@@ -3,7 +3,10 @@
 namespace Framework\Routing;
 
 use Exception;
+use Framework\Validation\ValidationException;
 use Throwable;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
 
 class Router
 {
@@ -11,12 +14,15 @@ class Router
     protected array $errorHandlers = [];
     protected Route $current;
 
-    public function add(string $method, string $path, callable $handler): Route
+    public function add(string $method, string $path, $handler): Route
     {
         $route = $this->routes[] = new Route($method, $path, $handler);
         return $route;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function dispatch()
     {
         $paths = $this->paths();
@@ -24,23 +30,28 @@ class Router
         $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $requestPath = $_SERVER['REQUEST_URI'] ?? '/';
 
-        // this looks through the defined routes and returns
-        // the first that matches the requested method and path
         $matching = $this->match($requestMethod, $requestPath);
 
         if ($matching) {
+            $this->current = $matching;
             try {
-                // this action could throw and exception
-                // so we catch it and display the global error
-                // page that we will define in the routes file
                 return $matching->dispatch();
             } catch (Throwable $e) {
+                if ($e instanceof ValidationException) {
+                    $_SESSION['errors'] = $e->getErrors();
+                    return redirect($_SERVER['HTTP_REFERER']);
+                }
+
+                if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'dev') {
+                    $whoops = new Run();
+                    $whoops->pushHandler(new PrettyPageHandler());
+                    $whoops->register();
+                    throw $e;
+                }
                 return $this->dispatchError();
             }
         }
 
-        // if the path is defined for a different method
-        // we can show a unique error page for it
         if (in_array($requestPath, $paths)) {
             return $this->dispatchNotAllowed();
         }
