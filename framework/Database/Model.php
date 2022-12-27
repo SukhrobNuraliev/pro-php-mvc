@@ -88,6 +88,11 @@ abstract class Model
             ->from($model->getTable());
     }
 
+    public static function find(int $id): static
+    {
+        return static::where('id', $id)->first();
+    }
+
     public function setConnection(Connection $connection): static
     {
         $this->connection = $connection;

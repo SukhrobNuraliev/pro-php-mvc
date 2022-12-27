@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Products;
 
+use App\Models\Product;
 use Framework\Routing\Router;
 
 class ShowProductController
@@ -20,9 +21,12 @@ class ShowProductController
     {
         $parameters = $this->router->current()->parameters();
 
+        $product = Product::find((int)$parameters['product']);
+
         return view('products/view', [
-            'product' => $parameters['product'],
-            'scary' => '<script>alert("hello")</script>',
+            'product' => $product,
+            'orderAction' => $this->router->route('order-product', ['product' => $product->id]),
+            'csrf' => csrf(),
         ]);
     }
 }

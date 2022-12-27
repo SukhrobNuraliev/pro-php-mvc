@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Product;
 use Framework\Database\Connection\MysqlConnection;
 use Framework\Database\Connection\SqliteConnection;
 use Framework\Database\Factory;
+use Framework\Routing\Router;
 use Framework\View\View;
 
 class ShowHomeController
@@ -10,29 +12,17 @@ class ShowHomeController
     /**
      * @throws Exception
      */
-    public function handle(): View
+    public function handle(Router $router): View
     {
-        $factory = new Factory();
-        $factory->addConnector('mysql', function ($config) {
-            return new MysqlConnection($config);
-        });
-        $factory->addConnector('sqlite', function ($config) {
-            return new SqliteConnection($config);
-        });
+        $products = Product::all();
 
-        $config = require __DIR__ . '/../../../config/database.php';
-
-        $connection = $factory->connect($config[$config['default']]);
-
-        $product = $connection
-            ->query()
-            ->select()
-            ->from('products')
-            ->first();
+        $productsWithRoutes = array_map(function ($product) {
+            $product->route = $this->router->route('view-product', ['product' => $product->id]);
+            return $product;
+        }, $products);
 
         return view('home', [
-            'number' => 42,
-            'featured' => $product,
+            'products' => $productsWithRoutes,
         ]);
     }
 }

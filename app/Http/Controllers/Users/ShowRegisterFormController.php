@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Http\Controllers\Users;
+
+use Exception;
 use Framework\Routing\Router;
 
 class ShowRegisterFormController

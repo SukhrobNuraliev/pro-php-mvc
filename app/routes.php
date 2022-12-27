@@ -3,6 +3,8 @@
 use App\Http\Controllers\Products\ListProductsController;
 use App\Http\Controllers\Products\ShowProductController;
 use App\Http\Controllers\Services\ShowServiceController;
+use App\Http\Controllers\Users\RegisterUserController;
+use App\Http\Controllers\Users\ShowRegisterFormController;
 use Framework\Routing\Router;
 
 return function (Router $router) {

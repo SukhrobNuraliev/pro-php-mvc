@@ -1,6 +1,10 @@
 <?php
 
+namespace App\Http\Controllers\Users;
+
+use Exception;
 use Framework\Routing\Router;
+use JetBrains\PhpStorm\NoReturn;
 
 class RegisterUserController
 {
@@ -14,7 +18,7 @@ class RegisterUserController
     /**
      * @throws Exception
      */
-    public function handle()
+    #[NoReturn] public function handle()
     {
         secure();
 
@@ -22,7 +26,14 @@ class RegisterUserController
             'name' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required', 'min:10'],
-        ]);
+        ], 'register_errors');
+
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
+        $user->save();
+
         // use $data to create a database record...
         $_SESSION['registered'] = true;
 

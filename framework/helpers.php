@@ -1,33 +1,17 @@
 <?php
 
+use Framework\App;
+use Framework\Validation\Manager;
+use Framework\Validation\Rule\EmailRule;
+use Framework\Validation\Rule\MinRule;
+use Framework\Validation\Rule\RequiredRule;
 use Framework\View;
 use JetBrains\PhpStorm\NoReturn;
 
 if (!function_exists('view')) {
-    /**
-     * @throws Exception
-     */
     function view(string $template, array $data = []): View\View
     {
-        static $manager;
-
-        if (!$manager) {
-            $manager = new View\Manager();
-            // let's add a path for our views folder
-            // so the manager knows where to look for views
-            $manager->addPath(__DIR__ . '/../resources/views');
-            // we'll also start adding new engine classes
-            // with their expected extensions to be able to pick
-            // the appropriate engine for the template
-            $manager->addEngine('basic.php', new View\Engine\BasicEngine());
-            $manager->addEngine('php', new View\Engine\PhpEngine());
-            $manager->addEngine('php', new View\Engine\PhpEngine());
-
-            $manager->addMacro('escape', fn($value) => htmlspecialchars($value));
-            $manager->addMacro('includes', fn(...$params) => print view(...$params));
-        }
-
-        return $manager->resolve($template, $data);
+        return app()->resolve('view')->resolve($template, $data);
     }
 }
 
@@ -40,17 +24,20 @@ if (!function_exists('redirect')) {
 }
 
 if (!function_exists('validate')) {
-    function validate(array $data, array $rules)
+
+    app()->bind('validator', function ($app) {
+        $manager = new Manager();
+        // let's add the rules that come with the framework
+        $manager->addRule('required', new RequiredRule());
+        $manager->addRule('email', new EmailRule());
+        $manager->addRule('min', new MinRule());
+
+        return $manager;
+    });
+
+    function validate(array $data, array $rules, string $sessionName = 'errors')
     {
-        static $manager;
-        if (!$manager) {
-            $manager = new Validation\Manager();
-            // let's add the rules that come with the framework
-            $manager->addRule('required', new Validation\Rule\RequiredRule());
-            $manager->addRule('email', new Validation\Rule\EmailRule());
-            $manager->addRule('min', new Validation\Rule\MinRule());
-        }
-        return $manager->validate($data, $rules);
+        return app('validator')->validate($data, $rules, $sessionName);
     }
 }
 
@@ -75,5 +62,26 @@ if (!function_exists('secure')) {
             !hash_equals($_SESSION['token'], $_POST['csrf'])) {
             throw new Exception('CSRF token mismatch');
         }
+    }
+}
+
+if (!function_exists('basePath')) {
+    function basePath(string $newBasePath = null): ?string
+    {
+        // static $basePath;
+        // if (!is_null($newBasePath)) {
+        //     $basePath = $newBasePath;
+        // }
+        // return $basePath;
+        return app('paths.base');
+    }
+}
+if (!function_exists('app')) {
+    function app(string $alias = null): mixed
+    {
+        if (is_null($alias)) {
+            return App::getInstance();
+        }
+        return App::getInstance()->resolve($alias);
     }
 }

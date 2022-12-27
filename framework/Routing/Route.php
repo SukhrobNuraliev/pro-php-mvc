@@ -111,11 +111,11 @@ class Route
             [$class, $method] = $this->handler;
 
             if (is_string($class)) {
-                return (new $class)->{$method}();
+                return app()->call([new $class, $method]);
             }
-            return $class->{$method}();
+            return app()->call([$class, $method]);
         }
-        return call_user_func($this->handler);
+        return app()->call($this->handler);
     }
 
     public function name(string $name = null): mixed
