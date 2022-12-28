@@ -3,6 +3,7 @@
 namespace Framework;
 
 use Dotenv\Dotenv;
+use Framework\Http\Response;
 use Framework\Routing\Router;
 use ReflectionException;
 use ReflectionFunction;
@@ -34,7 +35,9 @@ class App extends Container
      */
     public function run()
     {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
         $basePath = $this->resolve('paths.base');
 
@@ -69,7 +72,12 @@ class App extends Container
         $this->bind(Router::class, fn() => $router);
         $routes = require "{$basePath}/app/routes.php";
         $routes($router);
-        print $router->dispatch();
+        $response = $router->dispatch();
+
+        if (!$response instanceof Response) {
+            $response = $this->resolve('response')->content($response);
+        }
+        return $response;
     }
 
 

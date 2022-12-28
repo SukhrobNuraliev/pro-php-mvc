@@ -15,11 +15,17 @@ if (!function_exists('view')) {
     }
 }
 
-if (!function_exists('redirect')) {
-    #[NoReturn] function redirect(string $url): void
+if (!function_exists('response')) {
+    function response()
     {
-        header("Location: {$url}");
-        exit;
+        return app('response');
+    }
+}
+
+if (!function_exists('redirect')) {
+    function redirect(string $url)
+    {
+        return response()->redirect($url);
     }
 }
 
