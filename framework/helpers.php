@@ -91,3 +91,21 @@ if (!function_exists('app')) {
         return App::getInstance()->resolve($alias);
     }
 }
+
+if (!function_exists('env')) {
+    function env(string $key, mixed $default = null): mixed
+    {
+        if (isset($_SERVER[$key])) {
+            return $_SERVER[$key];
+        }
+
+        return $default;
+    }
+}
+
+if (!function_exists('config')) {
+    function config(string $key, mixed $default = null): mixed
+    {
+        return app('config')->get($key, $default);
+    }
+}
