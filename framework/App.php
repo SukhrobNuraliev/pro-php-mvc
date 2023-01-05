@@ -35,14 +35,11 @@ class App extends Container
      */
     public function run()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-
         $basePath = $this->resolve('paths.base');
 
         $this->configure($basePath);
         $this->bindProviders($basePath);
+
         $this->dispatch($basePath);
     }
 
