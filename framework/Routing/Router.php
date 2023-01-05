@@ -37,17 +37,15 @@ class Router
             try {
                 return $matching->dispatch();
             } catch (Throwable $e) {
-                if ($e instanceof ValidationException) {
-                    $_SESSION['errors'] = $e->getErrors();
-                    return redirect($_SERVER['HTTP_REFERER']);
+                $result = null;
+
+                if ($handler = config('handlers.exceptions')) {
+                    $instance = new $handler();
+                    if ($result = $instance->showThrowable($e)) {
+                        return $result;
+                    }
                 }
 
-                if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'dev') {
-                    $whoops = new Run();
-                    $whoops->pushHandler(new PrettyPageHandler());
-                    $whoops->register();
-                    throw $e;
-                }
                 return $this->dispatchError();
             }
         }

@@ -6,33 +6,30 @@ use Framework\App;
 use Framework\Database\Connection\MysqlConnection;
 use Framework\Database\Connection\SqliteConnection;
 use Framework\Database\Factory;
+use Framework\Support\DriverFactory;
+use Framework\Support\DriverProvider;
 
-class DatabaseProvider
+class DatabaseProvider extends DriverProvider
 {
-    public function bind(App $app): void
+    protected function name(): string
     {
-        $app->bind('database', function ($app) {
-            $factory = new Factory();
-            $this->addMysqlConnector($factory);
-            $this->addSqliteConnector($factory);
-
-            $config = config('database');
-
-            return $factory->connect($config[$config['default']]);
-        });
+        return 'database';
     }
 
-    private function addMysqlConnector($factory): void
+    protected function factory(): Factory
     {
-        $factory->addConnector('sqlite', function ($config) {
-            return new SqliteConnection($config);
-        });
+        return new Factory();
     }
 
-    private function addSqliteConnector($factory): void
+    protected function drivers(): array
     {
-        $factory->addConnector('mysql', function ($config) {
-            return new MysqlConnection($config);
-        });
+        return [
+            'sqlite' => function ($config) {
+                return new SqliteConnection($config);
+            },
+            'mysql' => function ($config) {
+                return new MysqlConnection($config);
+            },
+        ];
     }
 }

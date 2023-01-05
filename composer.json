@@ -31,7 +31,8 @@
     "ext-pdo": "*",
     "symfony/console": "^6.2",
     "ext-mbstring": "*",
-    "league/flysystem": "^3.12"
+    "league/flysystem": "^3.12",
+    "opis/closure": "^3.6"
 
   },
   "require-dev": {

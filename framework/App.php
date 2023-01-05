@@ -22,12 +22,12 @@ class App extends Container
         return static::$instance;
     }
 
-    private function __construct()
+    public function prepare(): static
     {
-    }
-
-    private function __clone()
-    {
+        $basePath = $this->resolve('paths.base');
+        $this->configure($basePath);
+        $this->bindProviders($basePath);
+        return $this;
     }
 
     /**
@@ -35,12 +35,13 @@ class App extends Container
      */
     public function run()
     {
-        $basePath = $this->resolve('paths.base');
+        return $this->dispatch($this->resolve('paths.base'));
+        /*$basePath = $this->resolve('paths.base');
 
         $this->configure($basePath);
         $this->bindProviders($basePath);
 
-        $this->dispatch($basePath);
+        $this->dispatch($basePath);*/
     }
 
     private function configure(string $basePath)
