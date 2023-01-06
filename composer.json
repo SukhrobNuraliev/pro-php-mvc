@@ -32,7 +32,10 @@
     "symfony/console": "^6.2",
     "ext-mbstring": "*",
     "league/flysystem": "^3.12",
-    "opis/closure": "^3.6"
+    "opis/closure": "^3.6",
+    "monolog/monolog": "^3.2",
+    "swiftmailer/swiftmailer": "^6.3",
+    "wildbit/swiftmailer-postmark": "^3.4"
 
   },
   "require-dev": {

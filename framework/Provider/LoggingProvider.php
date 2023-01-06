@@ -2,17 +2,17 @@
 
 namespace Framework\Provider;
 
-use Framework\App;
-use Framework\Filesystem\Driver\LocalDriver;
-use Framework\Filesystem\Factory;
+use Framework\Logging\Driver\StreamDriver;
+use Framework\Logging\Factory;
 use Framework\Support\DriverFactory;
 use Framework\Support\DriverProvider;
 
-class FilesystemProvider extends DriverProvider
+class LoggingProvider extends DriverProvider
 {
+
     protected function name(): string
     {
-        return 'filesystem';
+        return 'logging';
     }
 
     protected function factory(): DriverFactory
@@ -23,8 +23,8 @@ class FilesystemProvider extends DriverProvider
     protected function drivers(): array
     {
         return [
-            'local' => function ($config) {
-                return new LocalDriver($config);
+            'stream' => function ($config) {
+                return new StreamDriver($config);
             },
         ];
     }

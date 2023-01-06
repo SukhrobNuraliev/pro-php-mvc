@@ -8,4 +8,6 @@ return [
     \Framework\Provider\ResponseProvider::class,
     \Framework\Provider\SessionProvider::class,
     \Framework\Provider\FilesystemProvider::class,
+    \Framework\Provider\LoggingProvider::class,
+    \Framework\Provider\EmailProvider::class,
 ];

@@ -14,7 +14,7 @@ class SessionProvider
         return 'session';
     }
 
-    protected function factory(): Factory
+    protected function factory(): DriverFactory
     {
         return new Factory();
     }
